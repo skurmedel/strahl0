@@ -2,10 +2,20 @@
 #include <strahl0.hpp>
 #include <cfloat>
 
+vec3 gamma_correct(vec3 const &v)
+{
+    vec3::type p = 1.0f/2.2f;
+    return vec3(
+        powf(v.x(), p),
+        powf(v.y(), p),
+        powf(v.z(), p)
+    );
+}
+
 vec3 color(ray const &r, hitable *world)
 {
     hit_record rec;
-    if (world->hit(r, 0.0f, FLT_MAX, rec))
+    if (world->hit(r, 0.0001f, FLT_MAX, rec))
     {
         vec3 target = rec.P + rec.N + sphere_random();
         return 0.5f * color(ray(rec.P, target - rec.P), world);
@@ -18,9 +28,9 @@ vec3 color(ray const &r, hitable *world)
 
 int main(int argc, char *argv[])
 {
-    int nx = 200;
-    int ny = 100;
-    int ns = 100;
+    int nx = 300;
+    int ny = 150;
+    int ns = 30;
 
     hitable_list world;
     world.list.push_back(new sphere(vec3(0,0,-1), 0.5));
@@ -41,7 +51,8 @@ int main(int argc, char *argv[])
                 ray r = cam.get_ray(u, v);
                 col += color(r, &world);
             }
-            col /= float(ns);                       
+            col /= float(ns);
+            col = gamma_correct(col);                       
 
             int ir = int(255.99 * col[0]);
             int ig = int(255.99 * col[1]);
