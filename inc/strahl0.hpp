@@ -6,6 +6,6 @@
 #include <hitable.hpp>
 #include <hitable_list.hpp>
 #include <sphere.hpp>
-
+#include <camera.hpp>
 
 #endif
