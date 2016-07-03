@@ -7,7 +7,8 @@ vec3 color(ray const &r, hitable *world)
     hit_record rec;
     if (world->hit(r, 0.0f, FLT_MAX, rec))
     {
-        return 0.5f * (rec.N + vec3(1,1,1));
+        vec3 target = rec.P + rec.N + sphere_random();
+        return 0.5f * color(ray(rec.P, target - rec.P), world);
     }
     
     vec3 unit = unit_vector(r.direction);

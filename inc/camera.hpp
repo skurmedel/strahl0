@@ -11,6 +11,16 @@ inline float random1d()
     return dist(gen);
 }
 
+inline vec3 sphere_random()
+{
+    vec3 p;
+    do
+    {
+        p = 2.0f * vec3(random1d(), random1d(), random1d()) - vec3(1,1,1);
+    } while (p.len2() >= 1.0);
+    return p;
+}
+
 class camera
 {
 public:
