@@ -130,4 +130,10 @@ inline void vector3<F>::normalize()
     e[2] *= repr;
 }
 
+template <typename F>
+inline vector3<F> reflect(vector3<F> const &v, vector3<F> const &N)
+{
+    return v - 2.0f * dot(v, N) * N;
+}
+
 #endif

@@ -1,30 +1,5 @@
 #include <sphere.hpp>
 
-
-float hit_sphere(vec3 const &c, float radius, ray const &r)
-{
-    float dot_dir = dot(r.direction, r.direction);
-    vec3 disp = r.origin - c;
-    float dot_dir_disp = dot(r.direction, disp);
-    float dot_disp = dot(disp, disp);
-    // We divide with dot_dir, and so we can use the pq-formula instead
-    // because it is much more beautiful :D
-    float p = (2.0f * dot_dir_disp) / dot_dir;
-    float q = (dot_disp - radius * radius) / dot_dir;
-    float discr = (p * p / 4.0f - q);
-    if (discr < 0.0f) 
-    {
-        return -1.0f;
-    }
-    else
-    {
-        // We just need one of the roots, if it has two, the sqrt will 
-        // handle it for us.
-        return -p - sqrt(discr);
-    }
-}
-
-
 bool sphere::hit(
     ray const &r, ray::t_type min, ray::t_type max, hit_record &rec) const
 {
@@ -73,6 +48,7 @@ bool sphere::hit(
         // We can use the radius to normalize here for somewhat snappier 
         // calculation.
         rec.N = this->normal_for_p(rec.P);
+        rec.mat_ptr = this->mat_ptr;
         return true;
     }
     return false;

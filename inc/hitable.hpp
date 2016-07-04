@@ -4,6 +4,8 @@
 #include <vec3.hpp>
 #include <ray.hpp>
 
+class material;
+
 struct hit_record 
 {
     // Position of hit on surface.
@@ -12,6 +14,8 @@ struct hit_record
     vec3 N;
     // Ray parameter t.
     ray::t_type t;
+    // Material at hit position.
+    material const *mat_ptr;
 };
 
 class hitable 

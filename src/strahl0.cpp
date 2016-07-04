@@ -12,13 +12,21 @@ vec3 gamma_correct(vec3 const &v)
     );
 }
 
-vec3 color(ray const &r, hitable *world)
+vec3 color(ray const &r, hitable *world, int depth)
 {
-    hit_record rec;
+    hit_record rec = {};
     if (world->hit(r, 0.0001f, FLT_MAX, rec))
     {
-        vec3 target = rec.P + rec.N + sphere_random();
-        return 0.5f * color(ray(rec.P, target - rec.P), world);
+        ray scattered;
+        vec3 attenuation;
+        if (rec.mat_ptr == 0)
+            std::cerr << "SCHEISSE!";
+        if (depth < 50 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+        {
+            return attenuation * color(scattered, world, depth+1);
+        }
+        else
+            return vec3(0,0,0);
     }
     
     vec3 unit = unit_vector(r.direction);
@@ -33,8 +41,14 @@ int main(int argc, char *argv[])
     int ns = 30;
 
     hitable_list world;
-    world.list.push_back(new sphere(vec3(0,0,-1), 0.5));
-    world.list.push_back(new sphere(vec3(0,-100.5,-1), 100.0f));
+    lambertian lambert1(vec3(0.8, 0.3, 0.3));
+    lambertian lambert2(vec3(0.8, 0.8, 0.0));
+    metal met1(vec3(0.8, 0.6, 0.2), 0.3);
+    metal met2(vec3(0.8, 0.8, 0.8), 1.0);
+    world.list.push_back(new sphere(vec3(0,0,-1), 0.5, &lambert1));
+    world.list.push_back(new sphere(vec3(0,-100.5,-1), 100.0f, &lambert2));
+    world.list.push_back(new sphere(vec3(1,0,-1), 0.5, &met1)),
+    world.list.push_back(new sphere(vec3(-1,0,-1), 0.5, &met2));
 
     camera cam;
     
@@ -49,7 +63,7 @@ int main(int argc, char *argv[])
                 float u = float(i + random1d()) / float(nx);
                 float v = float(j + random1d()) / float(ny);
                 ray r = cam.get_ray(u, v);
-                col += color(r, &world);
+                col += color(r, &world, 0);
             }
             col /= float(ns);
             col = gamma_correct(col);                       

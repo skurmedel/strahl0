@@ -7,5 +7,6 @@
 #include <hitable_list.hpp>
 #include <sphere.hpp>
 #include <camera.hpp>
+#include <stochastics.hpp>
 
 #endif
