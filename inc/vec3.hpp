@@ -136,4 +136,17 @@ inline vector3<F> reflect(vector3<F> const &v, vector3<F> const &N)
     return v - 2.0f * dot(v, N) * N;
 }
 
+template <typename F>
+inline bool refract(vector3<F> const &v, vector3<F> const &N, F ni_over_nt, vector3<F> &refracted)
+{
+    vector3<F> V = unit_vector(v);
+    F cos0 = dot(V, N);
+    F discriminant = 1.0 - ni_over_nt*ni_over_nt * (1.0 - cos0 * cos0);
+    if (discriminant > 0.0)
+    {
+        refracted = ni_over_nt * (V - N * cos0) - N * F(sqrt(discriminant));
+        return true;
+    }
+    return false;
+}
 #endif

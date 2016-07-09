@@ -1,6 +1,6 @@
 #include <iostream>
-#include <strahl0.hpp>
 #include <cfloat>
+#include "strahl0.hpp"
 
 vec3 gamma_correct(vec3 const &v)
 {
@@ -36,19 +36,19 @@ vec3 color(ray const &r, hitable *world, int depth)
 
 int main(int argc, char *argv[])
 {
-    int nx = 300;
-    int ny = 150;
-    int ns = 30;
+    int nx = 500;
+    int ny = 250;
+    int ns = 50;
 
     hitable_list world;
     lambertian lambert1(vec3(0.8, 0.3, 0.3));
     lambertian lambert2(vec3(0.8, 0.8, 0.0));
     metal met1(vec3(0.8, 0.6, 0.2), 0.3);
-    metal met2(vec3(0.8, 0.8, 0.8), 1.0);
+    dielectric dielc(1.5);
     world.list.push_back(new sphere(vec3(0,0,-1), 0.5, &lambert1));
     world.list.push_back(new sphere(vec3(0,-100.5,-1), 100.0f, &lambert2));
     world.list.push_back(new sphere(vec3(1,0,-1), 0.5, &met1)),
-    world.list.push_back(new sphere(vec3(-1,0,-1), 0.5, &met2));
+    world.list.push_back(new sphere(vec3(-1,0,-1), -0.5, &dielc));
 
     camera cam;
     
