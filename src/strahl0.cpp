@@ -38,17 +38,21 @@ int main(int argc, char *argv[])
 {
     int nx = 500;
     int ny = 250;
-    int ns = 50;
+    int ns = 80;
 
     hitable_list world;
     lambertian lambert1(vec3(0.8, 0.3, 0.3));
     lambertian lambert2(vec3(0.8, 0.8, 0.0));
-    metal met1(vec3(0.8, 0.6, 0.2), 0.3);
+    metal met1(vec3(0.8, 0.6, 0.2), 0.3, 1.6);
     dielectric dielc(1.5);
-    world.list.push_back(new sphere(vec3(0,0,-1), 0.5, &lambert1));
-    world.list.push_back(new sphere(vec3(0,-100.5,-1), 100.0f, &lambert2));
-    world.list.push_back(new sphere(vec3(1,0,-1), 0.5, &met1)),
-    world.list.push_back(new sphere(vec3(-1,0,-1), -0.5, &dielc));
+    world.list.push_back(new sphere(vec3(0,0,-2), 0.5, &lambert1));
+    world.list.push_back(new sphere(vec3(0,-100.5,-2), 100.0f, &met1));
+    world.list.push_back(new sphere(vec3(1,0,-1), 0.5, &met1));
+    for (int i = 0; i < 5; ++i)
+    {
+        world.list.push_back(new sphere(vec3(-3 + i,0,-3), 0.5, &lambert2));
+        world.list.push_back(new sphere(vec3(0.2 - i*0.2,0.0,-0.5), 0.05, &dielc));
+    }
 
     camera cam;
     
@@ -68,9 +72,9 @@ int main(int argc, char *argv[])
             col /= float(ns);
             col = gamma_correct(col);                       
 
-            int ir = int(255.99 * col[0]);
-            int ig = int(255.99 * col[1]);
-            int ib = int(255.99 * col[2]);
+            int ir = int(254.99 * col[0]);
+            int ig = int(254.99 * col[1]);
+            int ib = int(254.99 * col[2]);
             std::cout << ir << " " << ig << " " << ib << "\n";
         }
     }
