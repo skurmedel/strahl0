@@ -1,16 +1,23 @@
 #ifndef CAMERA_HPP
 #define CAMERA_HPP
 
+#include "ray.hpp"
+
 class camera
 {
 public:
-    camera():
-        lower_left_corner(-2.0, -1.0, -1.0),
-        horizontal(4.0, 0.0, 0.0),
-        vertical(0.0, 2.0, 0.0),
-        origin(0.0, 0.0, 0.0)
+    /*
+     Initialize a new camera object with the given vertical field of view,
+     in radians.
+	*/
+    camera(vec3::type vfov, vec3::type aspect=16.0/9.0):
+        lower_left_corner(), horizontal(), vertical(), origin()
     {
-        
+        vec3::type half_height = tan(vfov / 2.0);
+        vec3::type half_width = aspect * half_height;
+        lower_left_corner   = vec3(-half_width, -half_height, -1.0);
+        horizontal          = vec3(2.0 * half_width, 0, 0);
+        vertical            = vec3(0.0, 2.0 * half_height, 0);
     }
 
     ray get_ray(float u, float v) const

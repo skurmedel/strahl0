@@ -38,23 +38,16 @@ int main(int argc, char *argv[])
 {
     int nx = 500;
     int ny = 250;
-    int ns = 80;
+    int ns = 15;
 
     hitable_list world;
-    lambertian lambert1(vec3(0.8, 0.3, 0.3));
-    lambertian lambert2(vec3(0.8, 0.8, 0.0));
-    metal met1(vec3(0.8, 0.6, 0.2), 0.3, 1.6);
-    dielectric dielc(1.5);
-    world.list.push_back(new sphere(vec3(0,0,-2), 0.5, &lambert1));
-    world.list.push_back(new sphere(vec3(0,-100.5,-2), 100.0f, &met1));
-    world.list.push_back(new sphere(vec3(1,0,-1), 0.5, &met1));
-    for (int i = 0; i < 5; ++i)
-    {
-        world.list.push_back(new sphere(vec3(-3 + i,0,-3), 0.5, &lambert2));
-        world.list.push_back(new sphere(vec3(0.2 - i*0.2,0.0,-0.5), 0.05, &dielc));
-    }
+    lambertian lambert1(vec3(0.0, 0.0, 1.0));
+    lambertian lambert2(vec3(1.0, 0.0, 0.0));
+    float R = 0.707;
+    world.list.push_back(new sphere(vec3(-R, 0, -1), R, &lambert1));
+    world.list.push_back(new sphere(vec3( R, 0, -1), R, &lambert2));
 
-    camera cam;
+    camera cam(M_PI/2.0, float(nx)/float(ny));
     
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
     for (int j = ny - 1; j >= 0; j--)
