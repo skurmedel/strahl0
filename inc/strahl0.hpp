@@ -9,5 +9,7 @@
 #include "camera.hpp"
 #include "stochastics.hpp"
 #include "dielectric.hpp"
+#include "metal.hpp"
+#include "lambertian.hpp"
 
 #endif
