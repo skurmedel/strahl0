@@ -14,11 +14,6 @@ public:
     
     virtual bool hit(ray const &, ray::t_type min, ray::t_type max, hit_record &rec) const;
 
-    vec3 normal_for_p(vec3 const &p) const
-    {
-        return unit_vector(p - center);
-    }
-
     vec3 center;
     vec3::type radius;
     material const *mat_ptr;

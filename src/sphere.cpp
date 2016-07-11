@@ -45,9 +45,8 @@ bool sphere::hit(
 
         rec.t = t;
         rec.P = r(t);
-        // We can use the radius to normalize here for somewhat snappier 
-        // calculation.
-        rec.N = this->normal_for_p(rec.P);
+        
+        rec.N = (rec.P - center) / radius;
         rec.mat_ptr = this->mat_ptr;
         return true;
     }

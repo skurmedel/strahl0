@@ -131,14 +131,25 @@ inline void vector3<F>::normalize()
 }
 
 template <typename F>
+inline vector3<F> cross(vector3<F> const &a, vector3<F> const &b)
+{
+    return vector3<F>(
+         a.e[1] * b.e[2] - a.e[2] * b.e[1],
+        -a.e[0] * b.e[2] + a.e[2] * b.e[0],
+         a.e[0] * b.e[1] - a.e[1] * b.e[0]
+    );
+}
+
+template <typename F>
 inline vector3<F> reflect(vector3<F> const &v, vector3<F> const &N)
 {
     return v - 2.0f * dot(v, N) * N;
 }
 
 template <typename F>
-inline bool refract(vector3<F> const &v, vector3<F> const &N, F ni_over_nt, vector3<F> &refracted)
+inline bool refract(vector3<F> const &v, vector3<F> const &n, F ni_over_nt, vector3<F> &refracted)
 {
+    vector3<F> N = unit_vector(n);
     vector3<F> V = unit_vector(v);
     F cos0 = dot(V, N);
     F discriminant = 1.0 - ni_over_nt*ni_over_nt * (1.0 - cos0 * cos0);
