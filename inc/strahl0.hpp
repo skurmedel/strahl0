@@ -5,6 +5,7 @@
 #include "ray.hpp"
 #include "hitable.hpp"
 #include "hitable_list.hpp"
+#include "plane.hpp"
 #include "sphere.hpp"
 #include "camera.hpp"
 #include "stochastics.hpp"
