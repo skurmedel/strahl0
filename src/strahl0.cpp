@@ -45,12 +45,12 @@ int main(int argc, char *argv[])
     lambertian lambert2(vec3(0.8, 0.8, 0.0));
     metal metal1(vec3(0.8, 0.6, 0.2), 0.25);
     dielectric diel(1.5);
-    world.list.push_back(new sphere(vec3(0,0,-1), 0.5, &lambert1)); 
-    //world.list.push_back(new sphere(vec3(0,-100.5,-1), 100, &lambert2));
-    world.list.push_back(new plane(vec3(0,-0.5,0), vec3(0,1,0), &lambert2)); 
-    world.list.push_back(new sphere(vec3(1,0,-1), 0.5, &metal1)); 
-    world.list.push_back(new sphere(vec3(-1,0,-1),  0.5,  &diel)); 
-    world.list.push_back(new sphere(vec3(-1,0,-1), -0.45, &diel)); 
+    world.add(new sphere(vec3(0,0,-1), 0.5, &lambert1)); 
+    //world.add(new sphere(vec3(0,-100.5,-1), 100, &lambert2));
+    world.add(new plane(vec3(0,-0.5,0), vec3(0,1,0), &lambert2)); 
+    world.add(new sphere(vec3(1,0,-1), 0.5, &metal1)); 
+    world.add(new sphere(vec3(-1,0,-1),  0.5,  &diel)); 
+    world.add(new sphere(vec3(-1,0,-1), -0.45, &diel)); 
 
     camera cam(M_PI/3.5, float(nx)/float(ny));
     cam.look_at(vec3(-2,2,1), vec3(0,0,-1), vec3(0, 1, 0));

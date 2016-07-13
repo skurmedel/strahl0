@@ -14,6 +14,9 @@ public:
 
     virtual bool hit(ray const &, ray::t_type min, ray::t_type max, hit_record &rec) const;
 
+    void add(hitable *);
+
+private:
     list_type list;
 };
 

@@ -18,3 +18,8 @@ bool hitable_list::hit(
     }
     return hit_anything;
 }
+
+void hitable_list::add(hitable *h)
+{
+    list.push_back(h);
+}
