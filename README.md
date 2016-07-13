@@ -1,7 +1,7 @@
 # strahl0
 A raytracer designed after Peter Shirleys Raytracer in a Weekend.
 
-## Notes
+## Notes Book 1
 This raytracer differs from the one in the book in some ways. I use C++11 in 
 the makefile, and in the stochastics.hpp header, really everything else is 
 just plain boring C++98.
@@ -20,6 +20,9 @@ just plain boring C++98.
  - Some fields and variables have different names here and there.
 
 Note that the DOF chapter (the last) is not implemented.
+
+## Notes Book 2
+TBD
 
 I will most likely fork this, change stuff around and implement a proper 
 importance sampling path tracer to walk in the steps of my favourite
