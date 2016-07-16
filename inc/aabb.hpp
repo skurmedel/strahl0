@@ -13,7 +13,10 @@ public:
 
     bool hit(ray const &r, ray::t_type tmin, ray::t_type tmax) const;
 
-    friend aabb surrounding_aabb(aabb const &b0, aabb const &b1); 
+    friend aabb surrounding_aabb(aabb const &b0, aabb const &b1);
+
+    vec3 const &min_corner() const { return min; }
+    vec3 const &max_corner() const { return max; } 
 
 private:
     vec3 min;
