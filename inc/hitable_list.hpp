@@ -13,6 +13,7 @@ public:
     hitable_list(list_type const &l): list(l) {}
 
     virtual bool hit(ray const &, ray::t_type min, ray::t_type max, hit_record &rec) const;
+    virtual bool bounding_box(float time0, float time1, aabb &box) const;
 
     void add(hitable *);
 

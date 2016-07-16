@@ -19,6 +19,30 @@ bool hitable_list::hit(
     return hit_anything;
 }
 
+
+bool hitable_list::bounding_box(float time0, float time1, aabb &box) const
+{
+    if (list.size() < 1)
+        return false;
+    
+    aabb temp_box;
+    bool first_true = list[0]->bounding_box(time0, time1, temp_box);
+    if (!first_true)
+        return false;
+    else
+        box = temp_box;
+    for (std::size_t i = 0; i < list.size(); ++i)
+    {
+        if (list[i]->bounding_box(time0, time1, temp_box))
+        {
+            box = surrounding_aabb(box, temp_box);
+        } 
+        else 
+            return false;
+    }
+    return true;
+}
+
 void hitable_list::add(hitable *h)
 {
     list.push_back(h);

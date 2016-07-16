@@ -13,6 +13,7 @@ public:
     {}
     
     virtual bool hit(ray const &, ray::t_type min, ray::t_type max, hit_record &rec) const;
+    virtual bool bounding_box(float time0, float time1, aabb &box) const;
 
     vec3 center;
     vec3::type radius;

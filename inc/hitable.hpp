@@ -1,8 +1,9 @@
 #ifndef HITABLE_HPP
 #define HITABLE_HPP
 
-#include <vec3.hpp>
-#include <ray.hpp>
+#include "vec3.hpp"
+#include "ray.hpp"
+#include "aabb.hpp"
 
 class material;
 
@@ -22,6 +23,7 @@ class hitable
 {
 public:
     virtual bool hit(ray const &, ray::t_type min, ray::t_type max, hit_record &rec) const = 0;
+    virtual bool bounding_box(float time0, float time1, aabb &box) const = 0;
 };
 
 #endif

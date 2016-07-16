@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 {
     int nx = 600;
     int ny = 300;
-    int ns = 160;
+    int ns = 50;
 
     hitable_list world;
     lambertian lambert1(vec3(0.1, 0.2, 0.5));
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     dielectric diel(1.5);
     world.add(new sphere(vec3(0,0,-1), 0.5, &lambert1)); 
     //world.add(new sphere(vec3(0,-100.5,-1), 100, &lambert2));
-    world.add(new plane(vec3(0,-1,0), vec3(0.707,0.707,0), &metal2)); 
+    world.add(new plane(vec3(0,-0.5,0), vec3(0,1,0), &metal2)); 
     world.add(new sphere(vec3( 1,0,-1),  0.5, &metal1)); 
     world.add(new sphere(vec3(-1,0,-1),  0.5,  &diel)); 
     world.add(new sphere(vec3(-1,0,-1), -0.45, &diel));

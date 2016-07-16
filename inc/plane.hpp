@@ -31,6 +31,11 @@ public:
         return true;
     }
 
+    virtual bool bounding_box(float time0, float time1, aabb &box) const
+    {
+        return false;
+    }
+
 private:
     vec3 P;
     vec3 N;

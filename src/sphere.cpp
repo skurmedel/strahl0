@@ -52,3 +52,12 @@ bool sphere::hit(
     }
     return false;
 }
+
+bool sphere::bounding_box(float time0, float time1, aabb &box) const
+{
+    vec3 offset(radius, radius, radius);
+    box = aabb(
+        center - offset,
+        center + offset);
+    return true;
+}
