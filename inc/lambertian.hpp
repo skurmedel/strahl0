@@ -18,7 +18,7 @@ public:
         ray &out_scattered) const
     {
         vec3 target = rec.P + rec.N + sphere_random();
-        color albedo_val = albedo->value(0, 0, rec.P);
+        color albedo_val = albedo->value(rec.u, rec.v, rec.P);
 #ifdef LAMBERTIAN_SCATTER_ALWAYS
         // This code path is slower but less noisy for low sample 
         // counts.

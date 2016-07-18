@@ -1,4 +1,13 @@
 #include <sphere.hpp>
+#include <cmath>
+
+void set_uvs(vec3 const &unit_p, hit_record &rec)
+{
+    vec3::type phi = std::atan2(unit_p.z(), unit_p.x());
+    vec3::type theta = std::asin(unit_p.y());
+    rec.u = (phi + M_PI) / (2.0f * M_PI);
+    rec.v = 1.0 - (theta + M_PI / 2.0f) / M_PI;
+}
 
 bool sphere::hit(
     ray const &r, ray::t_type min, ray::t_type max, hit_record &rec) const
@@ -47,6 +56,7 @@ bool sphere::hit(
         rec.P = r(t);
         
         rec.N = (rec.P - center) / radius;
+        set_uvs(rec.N, rec);
         rec.mat_ptr = this->mat_ptr;
         return true;
     }

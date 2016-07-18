@@ -17,6 +17,8 @@ struct hit_record
     ray::t_type t;
     // Material at hit position.
     material const *mat_ptr;
+    // UV coordinates on surface.
+    vec3::type u, v;
 };
 
 class hitable 

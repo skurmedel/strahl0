@@ -14,5 +14,6 @@
 #include "lambertian.hpp"
 #include "texture.hpp"
 #include "bvh.hpp"
+#include "image_texture.hpp"
 
 #endif

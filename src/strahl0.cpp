@@ -38,23 +38,28 @@ int main(int argc, char *argv[])
 {
     int nx = 600;
     int ny = 300;
-    int ns = 150;
+    int ns = 50; 
 
     constant_texture blue_texture(color(0.1, 0.2, 0.5));
     constant_texture red_texture(color(1.0, 0.0, 0.0));
     checker_texture checkers(&blue_texture, &red_texture);
+    image_texture img_texture(image::load("textures/earth.jpg"));
 
     hitable_list objects;
-    lambertian lambert1(&blue_texture);
+    lambertian lambert1(&img_texture);
     metal metal1(vec3(0.8, 0.6, 0.2), 0.25);
+    metal metal2(vec3(0.5, 0.6, 0.4), 0.02);
     lambertian floor1(&checkers);
     dielectric diel(1.5);
     objects.add(new sphere(vec3(0,0,-1), 0.5, &lambert1)); 
     //objects.add(new sphere(vec3(0,-100.5,-1), 100, &lambert2));
-    objects.add(new plane(vec3(0,-0.5,0), vec3(0,1,0), &floor1)); 
+    objects.add(new plane(vec3(0,-0.5,0), vec3(0,1,0), &metal2)); 
     objects.add(new sphere(vec3( 1,0,-1),  0.5, &metal1)); 
-    objects.add(new sphere(vec3(-1,0,-1),  0.5,  &diel)); 
-    objects.add(new sphere(vec3(-1,0,-1), -0.45, &diel));
+    for (int i = 0; i < 4; i++)
+    {
+        objects.add(new sphere(vec3(-1,0,-1-i),  0.5,  &diel)); 
+        objects.add(new sphere(vec3(-1,0,-1-i), -0.45, &diel));
+    }
 
     bvh_node *node = bvh_node::build_tree(objects.get_list(), 0, 1);
 
@@ -76,6 +81,8 @@ int main(int argc, char *argv[])
             }
             col /= float(ns);
             col = gamma_correct(col);
+            if (col.x() > 1 || col.y() > 1 || col.z() > 1)
+                std::cout << "# channel greater than 1 at " << i << "," << j << "\n";
 
             int ir = int(254.99 * col[0]);
             int ig = int(254.99 * col[1]);

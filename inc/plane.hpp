@@ -27,6 +27,7 @@ public:
         rec.t = t;
         rec.P = r(t);
         rec.N = N;
+        // Todo: Compute UVs.
         rec.mat_ptr = this->mat_ptr;
         return true;
     }
