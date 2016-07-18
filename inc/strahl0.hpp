@@ -12,5 +12,7 @@
 #include "dielectric.hpp"
 #include "metal.hpp"
 #include "lambertian.hpp"
+#include "texture.hpp"
+#include "bvh.hpp"
 
 #endif

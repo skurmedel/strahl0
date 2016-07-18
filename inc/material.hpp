@@ -1,9 +1,10 @@
 #ifndef MATERIAL_HPP
 #define MATERIAL_HPP
 
-#include <hitable.hpp>
-#include <ray.hpp>
-#include <stochastics.hpp>
+#include "hitable.hpp"
+#include "ray.hpp"
+#include "stochastics.hpp"
+#include "color.hpp"
 
 template <typename F>
 inline F schlick(F cosine, F ref_index)
@@ -19,7 +20,7 @@ public:
     virtual bool scatter(
         ray const &r_in, 
         hit_record const &rec, 
-        vec3 &out_atten, 
+        color &out_atten, 
         ray &out_scattered) const = 0;
 };
 

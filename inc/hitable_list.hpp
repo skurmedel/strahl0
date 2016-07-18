@@ -17,6 +17,8 @@ public:
 
     void add(hitable *);
 
+    list_type const &get_list() const { return list; }
+
 private:
     list_type list;
 };

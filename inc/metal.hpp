@@ -6,7 +6,7 @@
 class metal: public material
 {
 public:
-    metal(vec3 const &a, vec3::type f = 0.0, vec3::type ref_index = 1.5, vec3 grazing_color=vec3(1,1,1)):
+    metal(color const &a, vec3::type f = 0.0, vec3::type ref_index = 1.5, color grazing_color=color(1,1,1)):
         albedo(a), fuzz(f), ref_index(ref_index), grazing_color(grazing_color) 
     {
         if (fuzz < 0.0)
@@ -18,7 +18,7 @@ public:
     virtual bool scatter(
         ray const &r_in, 
         hit_record const &rec, 
-        vec3 &out_atten, 
+        color &out_atten, 
         ray &out_scattered) const
     {
         vec3 dir = unit_vector(r_in.direction);
@@ -30,10 +30,10 @@ public:
     }
 
 private:
-    vec3 albedo;
+    color albedo;
     vec3::type fuzz;
     vec3::type ref_index;
-    vec3 grazing_color;
+    color grazing_color;
 };
 
 #endif

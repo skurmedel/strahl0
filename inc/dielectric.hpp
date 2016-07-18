@@ -13,7 +13,7 @@ public:
     virtual bool scatter(
         ray const &r_in, 
         hit_record const &rec, 
-        vec3 &out_atten, 
+        color &out_atten, 
         ray &out_scattered) const
     {
         vec3 outward_normal;

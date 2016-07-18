@@ -54,7 +54,8 @@ bvh_node *bvh_node::build_tree(std::vector<hitable *> hitables, float time0, flo
         node->right = build_tree(std::vector<hitable *>(hitables.begin() + hitables.size() / 2, hitables.end()), time0, time1);
     }
     aabb bounds_left, bounds_right;
-    if (!left->bounding_box(time0, time1, bounds_left) || !right->bounding_box(time0, time1, bounds_right))
+    if (!node->left->bounding_box(time0, time1, bounds_left) 
+     || !node->right->bounding_box(time0, time1, bounds_right))
         empty_bounds_detected = true;
     node->bounds = surrounding_aabb(bounds_left, bounds_right);
     return node;

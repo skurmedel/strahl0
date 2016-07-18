@@ -17,12 +17,12 @@ public:
         // Since our plane is infinite, there's only one way the ray can miss,
         // and that is for our plane and ray to be parallel. If our ray is  
         // contained in the plane, we see that as a miss too.
-        ray::t_type N_dot_dir = dot(N, unit_vector(r.direction));
-        if (fabs(N_dot_dir) < 0.0000001f)
+        ray::t_type N_dot_dir = dot(N, r.direction);
+        if (fabs(N_dot_dir) < 0.00000001f)
             return false;
         
         ray::t_type t = dot(N, P - r.origin) / N_dot_dir;
-        if (t < min || t > max)
+        if (t < 0 || t < min || t > max)
             return false;
         rec.t = t;
         rec.P = r(t);

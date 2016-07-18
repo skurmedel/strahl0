@@ -37,10 +37,11 @@ public:
     ray get_ray(float u, float v) const
     {
         return ray(
-            origin, 
+            origin,
+            unit_vector( 
               lower_left_corner 
             + u * horizontal 
-            + v * vertical - origin);
+            + v * vertical - origin));
     }
 
     vec3 lower_left_corner;

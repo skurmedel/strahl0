@@ -19,7 +19,7 @@ public:
     hitable const *left_child() const { return left; }
     hitable const *right_child() const { return right; }
 
-    bvh_node *build_tree(std::vector<hitable *> hitables, float time0, float time1);
+    static bvh_node *build_tree(std::vector<hitable *> hitables, float time0, float time1);
 
 private:
     hitable *left, *right;
