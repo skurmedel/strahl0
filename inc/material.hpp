@@ -22,6 +22,11 @@ public:
         hit_record const &rec, 
         color &out_atten, 
         ray &out_scattered) const = 0;
+    
+    virtual color emitted(vec3::type u, vec3::type v, vec3 const &P)
+    {
+        return color(0,0,0);
+    }
 };
 
 #endif
