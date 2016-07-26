@@ -23,7 +23,7 @@ public:
         color &out_atten, 
         ray &out_scattered) const = 0;
     
-    virtual color emitted(vec3::type u, vec3::type v, vec3 const &P)
+    virtual color emitted(vec3::type u, vec3::type v, vec3 const &P) const
     {
         return color(0,0,0);
     }

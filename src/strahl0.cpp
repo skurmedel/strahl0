@@ -1,6 +1,11 @@
 #include <iostream>
 #include <cfloat>
 #include "strahl0.hpp"
+#include "external.hpp"
+
+#ifdef _WIN32
+#include <fcntl.h>
+#endif
 
 vec3 gamma_correct(vec3 const &v)
 {
@@ -21,17 +26,23 @@ color compute_color(ray const &r, hitable *world, int depth)
         color attenuation;
         if (rec.mat_ptr == 0)
             std::cerr << "SCHEISSE!";
+        color emitted = rec.mat_ptr->emitted(rec.u, rec.v, rec.P); 
         if (depth < 50 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
         {
-            return attenuation * compute_color(scattered, world, depth+1);
+            return emitted + attenuation * compute_color(scattered, world, depth+1);
         }
         else
-            return color(0,0,0);
+            return emitted;
     }
     
     vec3 unit = unit_vector(r.direction);
     float t = 0.5f * (unit.y() + 1.0);
     return (1.0f - t)  * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0); 
+}
+
+void stbi_write_to_stdout(void *context, void *data, int size)
+{
+    fwrite(data, sizeof(char), size, stdout);
 }
 
 int main(int argc, char *argv[])
@@ -66,7 +77,15 @@ int main(int argc, char *argv[])
     camera cam(M_PI/3.7, float(nx)/float(ny));
     cam.look_at(vec3(-2,3,1), vec3(0,0,-1), vec3(0, 1, 0));
     
-    std::cout << "P3\n" << nx << " " << ny << "\n255\n";
+#ifdef _WIN32
+    setmode(fileno(stdout), O_BINARY);
+#endif
+
+    // Don't stack allocate this, it is usually way larger than the compiler's set
+    // stack size. 
+    unsigned char *img = new unsigned char[nx * ny * 3];
+
+    //std::cout << "P3\n" << nx << " " << ny << "\n255\n";
     for (int j = ny - 1; j >= 0; j--)
     {
         for (int i = 0; i < nx; i++)
@@ -81,13 +100,18 @@ int main(int argc, char *argv[])
             }
             col /= float(ns);
             col = gamma_correct(col);
-            if (col.x() > 1 || col.y() > 1 || col.z() > 1)
+            /*if (col.x() > 1 || col.y() > 1 || col.z() > 1)
                 std::cout << "# channel greater than 1 at " << i << "," << j << "\n";
-
-            int ir = int(254.99 * col[0]);
-            int ig = int(254.99 * col[1]);
-            int ib = int(254.99 * col[2]);
-            std::cout << ir << " " << ig << " " << ib << "\n";
+            */
+            img[((ny - 1 - j) * nx + i) * 3 + 0] = (unsigned char)(254.99 * col[0]);
+            img[((ny - 1 - j) * nx + i) * 3 + 1] = (unsigned char)(254.99 * col[1]);
+            img[((ny - 1 - j) * nx + i) * 3 + 2] = (unsigned char)(254.99 * col[2]);
+            //std::cout << ir << " " << ig << " " << ib << "\n";
         }
     }
+
+    if (!stbi_write_png_to_func(stbi_write_to_stdout, 0, nx, ny, 3, img, 3 * sizeof(char) * nx))
+        std::cerr << "Failed to write anything at all.\n";
+
+    delete[] img;
 }
