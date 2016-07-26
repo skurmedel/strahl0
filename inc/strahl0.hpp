@@ -15,5 +15,6 @@
 #include "texture.hpp"
 #include "bvh.hpp"
 #include "image_texture.hpp"
+#include "diffuse_light.hpp"
 
 #endif

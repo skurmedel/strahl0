@@ -17,6 +17,16 @@ vec3 gamma_correct(vec3 const &v)
     );
 }
 
+vec3 gamma_corrected_clamp(color const &c)
+{
+    color gc = gamma_correct(c);
+    return color(
+        gc.x() > 1.0? 1.0 : gc.x(),
+        gc.y() > 1.0? 1.0 : gc.y(),
+        gc.z() > 1.0? 1.0 : gc.z()
+    );
+}
+
 color compute_color(ray const &r, hitable *world, int depth)
 {
     hit_record rec = {};
@@ -35,9 +45,7 @@ color compute_color(ray const &r, hitable *world, int depth)
             return emitted;
     }
     
-    vec3 unit = unit_vector(r.direction);
-    float t = 0.5f * (unit.y() + 1.0);
-    return (1.0f - t)  * color(1.0, 1.0, 1.0) + t * color(0.5, 0.7, 1.0); 
+    return color(0,0,0); 
 }
 
 void stbi_write_to_stdout(void *context, void *data, int size)
@@ -51,6 +59,8 @@ int main(int argc, char *argv[])
     int ny = 300;
     int ns = 50; 
 
+    constant_texture light_color(70.0f*color(0.8, 1.0, 1.0));
+
     constant_texture blue_texture(color(0.1, 0.2, 0.5));
     constant_texture red_texture(color(1.0, 0.0, 0.0));
     constant_texture gold_texture(color(0.8, 0.6, 0.2));
@@ -60,13 +70,17 @@ int main(int argc, char *argv[])
     hitable_list objects;
     lambertian lambert1(&img_texture);
     metal metal1(&gold_texture, 0.25);
-    metal metal2(&checkers, 0.02);
+    lambertian floor(&checkers);
+    diffuse_light light(&light_color);
     dielectric diel(1.5);
     objects.add(new sphere(vec3(0,0,-1), 0.5, &lambert1)); 
     //objects.add(new sphere(vec3(0,-100.5,-1), 100, &lambert2));
-    objects.add(new plane(vec3(0,-1.5,0), vec3(0,1,0), &metal2)); 
-    objects.add(new sphere(vec3( 1,0,-1),  0.5, &metal1)); 
-    for (int i = 0; i < 4; i++)
+    objects.add(new plane(vec3(0,-1.5,0), vec3(0,1,0), &floor)); 
+    objects.add(new plane(vec3(2.5,-1.5,0), vec3(-1,0,0), &floor)); 
+    objects.add(new plane(vec3(2.5,-1.5,-4), vec3(0,0,1), &floor)); 
+    objects.add(new sphere(vec3( 1,0,-1),  0.5, &metal1));
+    objects.add(new sphere(vec3( 0.5, 0.3, 0.5), 0.25, &light));
+    for (int i = 0; i < 2; i++)
     {
         objects.add(new sphere(vec3(-1,0,-1-i),  0.5,  &diel)); 
         objects.add(new sphere(vec3(-1,0,-1-i), -0.45, &diel));
@@ -99,7 +113,7 @@ int main(int argc, char *argv[])
                 col += compute_color(r, &objects, 0);
             }
             col /= float(ns);
-            col = gamma_correct(col);
+            col = gamma_corrected_clamp(col);
             /*if (col.x() > 1 || col.y() > 1 || col.z() > 1)
                 std::cout << "# channel greater than 1 at " << i << "," << j << "\n";
             */
