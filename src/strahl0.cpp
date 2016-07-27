@@ -53,47 +53,40 @@ void stbi_write_to_stdout(void *context, void *data, int size)
     fwrite(data, sizeof(char), size, stdout);
 }
 
+void mk_cornell_box(hitable_list &list)
+{
+    material *r = new lambertian(new constant_texture(color(0.65, 0.05, 0.05)));
+    material *white = new lambertian(new constant_texture(color(0.73, 0.73, 0.73)));
+    material *g = new lambertian(new constant_texture(color(0.12, 0.45, 0.15)));
+
+    material *glass = new dielectric(1.56);
+    material *light = new diffuse_light(new constant_texture(color(15,15,15)));
+
+    list.add(new flip_normals(new aa_rectangle<Y_AXIS, Z_AXIS>(0, 555, 0, 555, 555, g))); 
+    list.add(new aa_rectangle<Y_AXIS, Z_AXIS>(0, 555, 0, 555, 0, r)); 
+    list.add(new aa_rectangle<X_AXIS, Z_AXIS>(213, 343, 227, 332, 554, light)); 
+    list.add(new flip_normals(new aa_rectangle<X_AXIS, Z_AXIS>(0, 555, 0, 555, 555, white))); 
+    list.add(new aa_rectangle<X_AXIS, Z_AXIS>(0, 555, 0, 555, 0, white)); 
+    list.add(new flip_normals(new aa_rectangle<X_AXIS, Y_AXIS>(0, 555, 0, 555, 555, white)));
+    list.add(new sphere(vec3(277.5,277.5,277.5), 200.0f, glass)); 
+}
+
+void set_cornell_view(camera &cam, int nx, int ny)
+{
+    cam = camera(0.6981, float(nx)/float(ny));
+    cam.look_at(vec3(278, 278, -800), vec3(278,278,0));
+}
+
 int main(int argc, char *argv[])
 {
-    int nx = 600;
-    int ny = 300;
-    int ns = 50; 
-
-    constant_texture light_color(70.0f*color(0.8, 1.0, 1.0));
-
-    constant_texture checker_diffuse1(color(0.1, 0.2, 0.5));
-    constant_texture checker_diffuse2(color(0.9, 0.9, 0.9));
-    constant_texture gold_texture(color(0.8, 0.6, 0.2));
-    checker_texture checkers(&checker_diffuse1, &checker_diffuse2);
-    image_texture img_texture(image::load("textures/earth.jpg"));
-
-    hitable_list objects;
-    
-    lambertian lambert1(&img_texture);
-    metal metal1(&gold_texture, 0.25);
-    lambertian floor(&checkers);
-    diffuse_light light(&light_color);
-    dielectric diel(1.5);
-    objects.add(new sphere(vec3(0,0,-1), 0.5, &lambert1)); 
-    //objects.add(new sphere(vec3(0,-100.5,-1), 100, &lambert2));
-    objects.add(new sphere(vec3( 1,0,-1),  0.5, &metal1));
-    for (int i = 0; i < 2; i++)
-    {
-        objects.add(new sphere(vec3(-1,0,-1-i),  0.5,  &diel)); 
-        objects.add(new sphere(vec3(-1,0,-1-i), -0.45, &diel));
-    }
-
-    bvh_node *node = bvh_node::build_tree(objects.get_list(), 0, 1);
-
-    hitable_list final_list;
-    final_list.add(node);
-    final_list.add(new disc(vec3( 2.45, 0.3, 0.5), vec3(-1,0,0), 0.55, &light));   
-    final_list.add(new plane(vec3(0,-1.5,0), vec3(0,1,0), &floor)); 
-    final_list.add(new plane(vec3(2.5,-1.5,0), vec3(-1,0,0), &floor)); 
-    final_list.add(new plane(vec3(2.5,-1.5,-4), vec3(0,0,1), &floor));
+    int nx = 450;
+    int ny = 450;
+    int ns = 300; 
 
     camera cam(M_PI/3.7, float(nx)/float(ny));
-    cam.look_at(vec3(-2,3,1), vec3(0,0,-1), vec3(0, 1, 0));
+    hitable_list list;
+    mk_cornell_box(list);
+    set_cornell_view(cam, nx, ny);
     
 #ifdef _WIN32
     setmode(fileno(stdout), O_BINARY);
@@ -114,7 +107,7 @@ int main(int argc, char *argv[])
                 float u = float(i + random1d()) / float(nx);
                 float v = float(j + random1d()) / float(ny);
                 ray r = cam.get_ray(u, v);
-                col += compute_color(r, &final_list, 0);
+                col += compute_color(r, &list, 0);
             }
             col /= float(ns);
             col = gamma_corrected_clamp(col);
