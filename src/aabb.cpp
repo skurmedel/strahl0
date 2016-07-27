@@ -3,6 +3,8 @@
 
 bool aabb::hit(ray const &r, ray::t_type tmin, ray::t_type tmax) const
 {
+    // Uses a variant of Amy William's method:
+    // http://people.csail.mit.edu/amy/papers/box-jgt.pdf
     for (int e = 0; e < 3; ++e) 
     {
         ray::t_type inv_d = 1.0f / r.direction[e];

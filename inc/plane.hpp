@@ -37,10 +37,32 @@ public:
         return false;
     }
 
-private:
+protected:
     vec3 P;
     vec3 N;
     material const *mat_ptr;
 };
+
+class disc: public plane 
+{
+public:
+    disc(vec3 const &p, vec3 const &n, vec3::type radius, material const *m):
+        plane(p, n, m), radius(radius) {}
+
+    virtual bool hit(ray const &r, ray::t_type min, ray::t_type max, hit_record &rec) const
+    {
+        bool hit_infinite_plane = plane::hit(r, min, max, rec);
+        return hit_infinite_plane && (rec.P - P).len() <= radius;
+    }    
+
+    virtual bool bounding_box(float time0, float time1, aabb &box) const
+    {
+        return false;
+    }
+
+private:
+    vec3::type radius;
+};
+
 
 #endif

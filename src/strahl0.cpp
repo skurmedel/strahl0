@@ -61,13 +61,14 @@ int main(int argc, char *argv[])
 
     constant_texture light_color(70.0f*color(0.8, 1.0, 1.0));
 
-    constant_texture blue_texture(color(0.1, 0.2, 0.5));
-    constant_texture red_texture(color(1.0, 0.0, 0.0));
+    constant_texture checker_diffuse1(color(0.1, 0.2, 0.5));
+    constant_texture checker_diffuse2(color(0.9, 0.9, 0.9));
     constant_texture gold_texture(color(0.8, 0.6, 0.2));
-    checker_texture checkers(&blue_texture, &red_texture);
+    checker_texture checkers(&checker_diffuse1, &checker_diffuse2);
     image_texture img_texture(image::load("textures/earth.jpg"));
 
     hitable_list objects;
+    
     lambertian lambert1(&img_texture);
     metal metal1(&gold_texture, 0.25);
     lambertian floor(&checkers);
@@ -75,11 +76,7 @@ int main(int argc, char *argv[])
     dielectric diel(1.5);
     objects.add(new sphere(vec3(0,0,-1), 0.5, &lambert1)); 
     //objects.add(new sphere(vec3(0,-100.5,-1), 100, &lambert2));
-    objects.add(new plane(vec3(0,-1.5,0), vec3(0,1,0), &floor)); 
-    objects.add(new plane(vec3(2.5,-1.5,0), vec3(-1,0,0), &floor)); 
-    objects.add(new plane(vec3(2.5,-1.5,-4), vec3(0,0,1), &floor)); 
     objects.add(new sphere(vec3( 1,0,-1),  0.5, &metal1));
-    objects.add(new sphere(vec3( 0.5, 0.3, 0.5), 0.25, &light));
     for (int i = 0; i < 2; i++)
     {
         objects.add(new sphere(vec3(-1,0,-1-i),  0.5,  &diel)); 
@@ -87,6 +84,13 @@ int main(int argc, char *argv[])
     }
 
     bvh_node *node = bvh_node::build_tree(objects.get_list(), 0, 1);
+
+    hitable_list final_list;
+    final_list.add(node);
+    final_list.add(new disc(vec3( 2.45, 0.3, 0.5), vec3(-1,0,0), 0.55, &light));   
+    final_list.add(new plane(vec3(0,-1.5,0), vec3(0,1,0), &floor)); 
+    final_list.add(new plane(vec3(2.5,-1.5,0), vec3(-1,0,0), &floor)); 
+    final_list.add(new plane(vec3(2.5,-1.5,-4), vec3(0,0,1), &floor));
 
     camera cam(M_PI/3.7, float(nx)/float(ny));
     cam.look_at(vec3(-2,3,1), vec3(0,0,-1), vec3(0, 1, 0));
@@ -110,7 +114,7 @@ int main(int argc, char *argv[])
                 float u = float(i + random1d()) / float(nx);
                 float v = float(j + random1d()) / float(ny);
                 ray r = cam.get_ray(u, v);
-                col += compute_color(r, &objects, 0);
+                col += compute_color(r, &final_list, 0);
             }
             col /= float(ns);
             col = gamma_corrected_clamp(col);
