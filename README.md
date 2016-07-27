@@ -22,6 +22,7 @@ just plain boring C++98.
 Note that the DOF chapter (the last) is not implemented.
 
 ## Notes Book 2
+  - No motion blur support although the interfaces are there.
   - `color` is used in most places where a color is expected as a result,
     `color` is just typedefed to `vec3` though.
   - `xy_rect` etc. all substituted with a single templated `aa_rectangle` class,
