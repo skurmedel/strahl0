@@ -22,8 +22,12 @@ just plain boring C++98.
 Note that the DOF chapter (the last) is not implemented.
 
 ## Notes Book 2
-TBD
-
-I will most likely fork this, change stuff around and implement a proper 
-importance sampling path tracer to walk in the steps of my favourite
-renderer, Arnold, after I've read book 3.
+  - `color` is used in most places where a color is expected as a result,
+    `color` is just typedefed to `vec3` though.
+  - `xy_rect` etc. all substituted with a single templated `aa_rectangle` class,
+    for example: `aa_rectangle<X_AXIS, Y_AXIS>`. This uses C++11 features to 
+    work out the complement set of `{axis1, axis2}`.
+  - Image textures are implemented, but not noise textures.
+  - bvh_node class is a bit different, builds a bvh from a hitable list in a 
+    static function instead.
+  - Volumes and instances not implemented
